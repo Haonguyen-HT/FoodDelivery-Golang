@@ -6,7 +6,7 @@ type Paging struct {
 	Page       int    `json:"page" form:"page"`
 	Limit      int    `json:"limit" form:"limit"`
 	Total      int64  `json:"total" form:"total"`
-	FakeCursor string `json:"fake_cursor" form:"cursor"`
+	Cursor     string `json:"cursor" form:"cursor"`
 	NextCursor string `json:"next_cursor" form:"next_cursor"`
 }
 
@@ -19,5 +19,5 @@ func (p *Paging) Fulfill() {
 		p.Limit = 10
 	}
 
-	p.FakeCursor = strings.TrimSpace(p.FakeCursor)
+	p.Cursor = strings.TrimSpace(p.Cursor)
 }

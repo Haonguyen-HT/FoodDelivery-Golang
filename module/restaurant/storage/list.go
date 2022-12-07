@@ -25,14 +25,30 @@ func (s *sqlStore) ListDataWithCondition(
 		return nil, err
 	}
 
-	offset := (paging.Page - 1) * paging.Limit
+	if v := paging.Cursor; v != "" {
+		uid, err := common.FromBase58(v)
+
+		if err != nil {
+			return nil, common.ErrDB(err)
+		}
+
+		db = db.Where("id < ?", uid.GetLocalID())
+	} else {
+		offset := (paging.Page - 1) * paging.Limit
+		db = db.Offset(offset)
+	}
 
 	if err := db.
-		Offset(offset).
 		Limit(paging.Limit).
 		Order("id desc").
 		Find(&data).Error; err != nil {
 		return nil, err
+	}
+
+	if len(data) > 0 {
+		last := data[len(data)-1]
+		last.Mask(false)
+		paging.NextCursor = last.UID.String()
 	}
 
 	return data, nil
