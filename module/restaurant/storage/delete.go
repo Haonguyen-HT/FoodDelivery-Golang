@@ -1,4 +1,4 @@
-package retaurantstorage
+package restaurantstorage
 
 import (
 	restaurantmodel "FoodDelivery/module/restaurant/model"

@@ -5,7 +5,8 @@ import (
 	"FoodDelivery/components/appcontext"
 	restaurantbusiness "FoodDelivery/module/restaurant/business"
 	restaurantmodel "FoodDelivery/module/restaurant/model"
-	retaurantstorage "FoodDelivery/module/restaurant/storage"
+	restaurantrepo "FoodDelivery/module/restaurant/repository"
+	restaurantstorage "FoodDelivery/module/restaurant/storage"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -32,8 +33,11 @@ func ListRestaurant(ctx appcontext.AppContext) gin.HandlerFunc {
 
 		var result []restaurantmodel.Restaurant
 
-		store := retaurantstorage.NewSQLStore(db)
-		biz := restaurantbusiness.NewListRestaurantBusiness(store)
+		store := restaurantstorage.NewSQLStore(db)
+		//likeStore := restaurantlikestorage.NewSQLStore(db)
+
+		repo := restaurantrepo.NewListRestaurantRepo(store)
+		biz := restaurantbusiness.NewListRestaurantBusiness(repo)
 
 		result, err := biz.ListRestaurant(c.Request.Context(), &filter, &pagingData)
 

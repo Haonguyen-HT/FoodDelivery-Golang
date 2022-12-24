@@ -111,3 +111,10 @@ func ErrCannotDeleteEntity(entity string, err error) *AppError {
 		fmt.Sprintf("ErrCannotDelete%s", entity),
 	)
 }
+func ErrRecordNotFound(err error) *AppError {
+	return NewCustomError(err, fmt.Sprintf("record not found"), fmt.Sprintf("RecordNotFound"))
+}
+
+func ErrNoPermission(err error) *AppError {
+	return NewCustomError(err, fmt.Sprintf("invalid permission"), fmt.Sprintf("ErrNoPermission"))
+}

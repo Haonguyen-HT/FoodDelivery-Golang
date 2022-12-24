@@ -1,4 +1,4 @@
-package retaurantstorage
+package restaurantstorage
 
 import (
 	"FoodDelivery/common"

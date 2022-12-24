@@ -1,4 +1,4 @@
-package retaurantstorage
+package restaurantstorage
 
 import (
 	"FoodDelivery/common"
@@ -23,6 +23,10 @@ func (s *sqlStore) ListDataWithCondition(
 
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, err
+	}
+
+	for i := range moreKeys {
+		db = db.Preload(moreKeys[i])
 	}
 
 	if v := paging.Cursor; v != "" {
