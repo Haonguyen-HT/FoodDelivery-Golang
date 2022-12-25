@@ -4,8 +4,9 @@ import (
 	"FoodDelivery/common"
 	restaurantmodel "FoodDelivery/module/restaurant/model"
 	restaurantlikesmodel "FoodDelivery/module/restaurantlikes/model"
+	"FoodDelivery/pubsub"
 	"context"
-	"fmt"
+	"log"
 )
 
 type UserLikeRestaurantStore interface {
@@ -18,16 +19,19 @@ type IncreaseLikeCount interface {
 		condition map[string]interface{},
 		moreKeys ...string,
 	) (*restaurantmodel.Restaurant, error)
-	IncreaseLikeCount(context context.Context, id int) error
 }
 
 type userLikeRestaurantBiz struct {
 	store        UserLikeRestaurantStore
 	icrLikeCount IncreaseLikeCount
+	ps           pubsub.Pubsub
 }
 
-func NewUserLikeRestaurantBiz(store UserLikeRestaurantStore, count IncreaseLikeCount) *userLikeRestaurantBiz {
-	return &userLikeRestaurantBiz{store: store, icrLikeCount: count}
+func NewUserLikeRestaurantBiz(
+	store UserLikeRestaurantStore,
+	count IncreaseLikeCount,
+	ps pubsub.Pubsub) *userLikeRestaurantBiz {
+	return &userLikeRestaurantBiz{store: store, icrLikeCount: count, ps: ps}
 }
 
 func (biz userLikeRestaurantBiz) LikeRestaurant(
@@ -47,12 +51,9 @@ func (biz userLikeRestaurantBiz) LikeRestaurant(
 		return restaurantlikesmodel.ErrCannotLikeRestaurant(err)
 	}
 
-	go func() {
-		defer common.AppRecover()
-		if err := biz.icrLikeCount.IncreaseLikeCount(ctx, data.RestaurantId); err != nil {
-			fmt.Println(err)
-		}
-	}()
+	if err := biz.ps.Publish(ctx, common.TopicUserLikeRestaurant, pubsub.NewMessage(data)); err != nil {
+		log.Println(err)
+	}
 
 	return nil
 }

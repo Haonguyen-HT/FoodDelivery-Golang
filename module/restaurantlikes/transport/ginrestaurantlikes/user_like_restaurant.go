@@ -35,7 +35,7 @@ func UserLikeRestaurant(ctx appcontext.AppContext) gin.HandlerFunc {
 		store := restaurantlikestorage.NewSQLStore(db)
 		icrLikeStore := restaurantstorage.NewSQLStore(db)
 
-		biz := rstlikebiz.NewUserLikeRestaurantBiz(store, icrLikeStore)
+		biz := rstlikebiz.NewUserLikeRestaurantBiz(store, icrLikeStore, ctx.GetPubSub())
 
 		if err := biz.LikeRestaurant(c.Request.Context(), &data); err != nil {
 			panic(err)

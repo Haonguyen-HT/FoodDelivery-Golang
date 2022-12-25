@@ -3,9 +3,11 @@ package main
 import (
 	"FoodDelivery/components/appcontext"
 	"FoodDelivery/middleware"
+	"FoodDelivery/pubsub/localPb"
 	"FoodDelivery/route/admin"
 	"FoodDelivery/route/client"
 	"FoodDelivery/route/user"
+	"FoodDelivery/subscriber"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
@@ -32,7 +34,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	appContext := appcontext.NewAppContext(db, nil, secretKey)
+	ps := localPb.NewPubSub()
+
+	appContext := appcontext.NewAppContext(db, nil, secretKey, ps)
+	// Set up subscriber
+
+	subscriber.NewEngine(appContext).Start()
+
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"*"}
 	config.AllowMethods = []string{"*"}

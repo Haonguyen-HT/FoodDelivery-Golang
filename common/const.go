@@ -14,3 +14,8 @@ type Requester interface {
 	GetUserEmail() string
 	GetUserRole() string
 }
+
+const (
+	TopicUserLikeRestaurant    = "TopicUserLikeRestaurant"
+	TopicUserDisLikeRestaurant = "TopicUserDisLikeRestaurant"
+)

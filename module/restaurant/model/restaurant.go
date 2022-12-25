@@ -46,7 +46,7 @@ func (data RestaurantCreate) Validate() error {
 	data.Name = strings.TrimSpace(data.Name)
 
 	if data.Name == "" {
-		return errors.New("name is not empty")
+		return ErrNameIsEmpty
 	}
 
 	return nil
@@ -66,3 +66,5 @@ type RestaurantUpdate struct {
 func (RestaurantUpdate) TableName() string {
 	return Restaurant{}.TableName()
 }
+
+var ErrNameIsEmpty = errors.New("name is not empty")

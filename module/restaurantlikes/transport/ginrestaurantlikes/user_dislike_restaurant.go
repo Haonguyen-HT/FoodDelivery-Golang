@@ -3,7 +3,6 @@ package ginrestaurantlikes
 import (
 	"FoodDelivery/common"
 	"FoodDelivery/components/appcontext"
-	restaurantstorage "FoodDelivery/module/restaurant/storage"
 	rstlikebiz "FoodDelivery/module/restaurantlikes/biz"
 	restaurantlikestorage "FoodDelivery/module/restaurantlikes/storage"
 	"github.com/gin-gonic/gin"
@@ -24,9 +23,9 @@ func UserDislikeRestaurant(ctx appcontext.AppContext) gin.HandlerFunc {
 		UserId := requester.GetUserID()
 
 		store := restaurantlikestorage.NewSQLStore(db)
-		dcrStore := restaurantstorage.NewSQLStore(db)
+		//dcrStore := restaurantstorage.NewSQLStore(db)
 
-		biz := rstlikebiz.NewUserDislikeRestaurantBiz(store, dcrStore)
+		biz := rstlikebiz.NewUserDislikeRestaurantBiz(store, ctx.GetPubSub())
 
 		if err := biz.DislikeRestaurant(c.Request.Context(), UserId, id); err != nil {
 			panic(err)
