@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo Socket Golang</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.4/socket.io.js" integrity="sha512-tB4uAb2jP0Vim+nBdvcTWzHeONczq6VYmodgCFGORawb1y2Fwg2eKp4aK7IxPmc+v6eo+dTDF4lEvldXXklScA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+<h1>Demo Socket Golang</h1>
+<script>
+ const socket = io("", {transports:["websocket"]});
+ let locTimer = null
+
+ socket.on("connect", () => {
+     console.log("Client connected!")
+     socket.emit("authenticate", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOjEsInJvbGUiOiJhZG1pbiJ9LCJleHAiOjE2NzI1NzcyMDcsImlhdCI6MTY3MTk3MjQwN30.IRUF1c03o1aZoYxRaXNgtEpEIjytLStE9cS0_QMqPcI")
+ })
+
+ socket.on("authenticate", mes => console.log("message:", mes))
+ socket.on("disconnect", () => console.log("socket is disconnected!"))
+
+
+</script>
+</body>
+</html>
