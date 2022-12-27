@@ -16,7 +16,20 @@
      socket.emit("authenticate", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOjEsInJvbGUiOiJhZG1pbiJ9LCJleHAiOjE2NzI1NzcyMDcsImlhdCI6MTY3MTk3MjQwN30.IRUF1c03o1aZoYxRaXNgtEpEIjytLStE9cS0_QMqPcI")
  })
 
- socket.on("authenticate", mes => console.log("message:", mes))
+ socket.on("authenticate", (mes) => {
+     console.log("message:", mes)
+
+     if (locTimer !== null) {
+         clearInterval(locTimer)
+     } else {
+         locTimer = setInterval(() => {
+             socket.emit("UserUpdateLocation", {lat: 10.21212121, lng: 222.002343434})
+         }, 2000)
+     }
+
+
+ })
+ socket.on("TopicUserLikeRestaurant", mes => console.log("data:", mes))
  socket.on("disconnect", () => console.log("socket is disconnected!"))
 
 
